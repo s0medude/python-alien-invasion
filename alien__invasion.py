@@ -82,7 +82,6 @@ class AlienInvasion:
             self._update_bullet()          
             self._update_screen()        
             
-
 if __name__ == "__main__":
     ai = AlienInvasion()
     ai.run_game()
