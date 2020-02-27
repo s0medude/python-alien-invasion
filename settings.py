@@ -3,7 +3,7 @@ import pygame
 
 class Settings:
     def __init__(self):
-        self.screen_width = 1000
+        self.screen_width = 900
         self.screen_heigth = 720
         self.bg_color = [0, 0, 0]
         self.bg_image = Background(self)
