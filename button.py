@@ -21,3 +21,7 @@ class Button:
         self.screen.fill(self.color, self.rect)
         self.screen.blit(self.msg_image, self.msg_image_rect)
 
+    def draw_level_button(self):
+        self.x = self.width + (2 * self.width)
+        self.rect.left = self.x 
+        self.draw_button()

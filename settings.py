@@ -26,12 +26,17 @@ class Settings:
     def initialize_dynamic_settings(self):
         # Initialize these values normally
         self.ship_speed = 1.5
-        self.bullet_speed = 2.0
+        self.bullet_speed = 1.0
         self.alien_speed = 1.0
         self.fleet_direction = 1 
 
-    def increase_speed(self):
+    def increase_speed(self, level=None):
         # Increase these attributtes according to the speedup_scale value 
-        self.ship_speed *= self.speedup_scale
-        self.bullet_speed *= self.speedup_scale
-        self.alien_speed *= self.speedup_scale
+        if level:
+            self.ship_speed *= level
+            self.bullet_speed *= level
+            self.alien_speed *= level
+        else:
+            self.ship_speed *= self.speedup_scale
+            self.bullet_speed *= self.speedup_scale
+            self.alien_speed *= self.speedup_scale
