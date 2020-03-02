@@ -20,8 +20,8 @@ class AlienInvasion:
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
-        self.play_button = Button(self, "START")
-        self.levels_button = Button(self, "LEVELS")
+        self.play_button = Button(self)
+        self.levels_button = Button(self)
 
     def _check_keydown_events(self, event):
         if event.key == pygame.K_RIGHT:
@@ -45,8 +45,8 @@ class AlienInvasion:
 
     def _check_mouse_events(self):
         mouse_pos = pygame.mouse.get_pos()
-        #self._check_play_button(mouse_pos)
-        self._check_levels_button(mouse_pos)
+        self._check_play_button(mouse_pos)
+        self._check_levels_button()        
 
     def _check_events(self):
         for event in pygame.event.get():
@@ -148,12 +148,12 @@ class AlienInvasion:
             self.settings.initialize_dynamic_settings() 
             self._start_game()     
 
-    def _check_levels_button(self, mouse_pos):
+    def _check_levels_button(self):
+        mouse_pos = pygame.mouse.get_pos()
         button_clicked = self.levels_button.rect.collidepoint(mouse_pos)
-        if button_clicked and not self.stats.game_active:
-            self.settings.initialize_dynamic_settings() 
-            self.settings.increase_speed(4)
-            self._start_game()
+        if not self.stats.game_active and button_clicked:
+            print("Clicked!")
+            return True
 
     def _start_game(self):
         self.stats.game_active = True
@@ -164,10 +164,16 @@ class AlienInvasion:
         self.ship.center_ship()
         pygame.mouse.set_visible(False)
     
-    def _draw_buttons(self):
+    def _draw_buttons(self):   
         if not self.stats.game_active:
-            self.play_button.draw_button()
-            self.levels_button.draw_level_button()             
+            self.play_button.draw_button("START", 300, 360)
+            self.levels_button.draw_button("LEVELS", 900, 360)
+        if not self.stats.game_active and self._check_levels_button() == True:
+            print("Event catched!")
+            button = Button(self)
+            button.width, button.height = 50, 50 
+            button.draw_button("1", 400, 280)
+             
          
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
@@ -175,7 +181,7 @@ class AlienInvasion:
         self.ship.blitme()
         self._draw_bullet()
         self.aliens.draw(self.screen)
-        self._draw_buttons()
+        self._draw_buttons()        
         pygame.display.flip()
 
     def run_game(self):
