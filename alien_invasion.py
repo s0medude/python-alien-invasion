@@ -46,7 +46,7 @@ class AlienInvasion:
     def _check_mouse_events(self):
         mouse_pos = pygame.mouse.get_pos()
         self._check_play_button(mouse_pos)
-        self._check_levels_button()        
+        self._check_levels_button(mouse_pos)
 
     def _check_events(self):
         for event in pygame.event.get():
@@ -140,20 +140,23 @@ class AlienInvasion:
         self._check_fleet_edges()
         self.aliens.update()     
         self._check_ship_hit()     
-        self._check_aliens_bottom()
+        self._check_aliens_bottom() 
 
-    def _check_play_button(self, mouse_pos):
-        button_clicked = self.play_button.rect.collidepoint(mouse_pos)
-        if button_clicked and not self.stats.game_active:      
+    def _draw_main_buttons(self):
+        if not self.stats.game_active:
+            if not self.levels_button.clicked:
+                self.play_button.draw_button("START", 450, 360)
+                self.levels_button.draw_button("LEVELS", 750, 360)
+
+    def _check_play_button(self, mouse_pos):        
+        if self.play_button.check_button(mouse_pos) and not self.stats.game_active:      
             self.settings.initialize_dynamic_settings() 
-            self._start_game()     
-
-    def _check_levels_button(self):
-        mouse_pos = pygame.mouse.get_pos()
-        button_clicked = self.levels_button.rect.collidepoint(mouse_pos)
-        if not self.stats.game_active and button_clicked:
-            print("Clicked!")
-            return True
+            self._start_game()
+        
+    def _check_levels_button(self, mouse_pos):
+        if self.levels_button.check_button(mouse_pos) and not self.stats.game_active:
+            print("Clicked!")           
+            self._draw_levels_buttons()
 
     def _start_game(self):
         self.stats.game_active = True
@@ -163,25 +166,26 @@ class AlienInvasion:
         self._create_fleet()
         self.ship.center_ship()
         pygame.mouse.set_visible(False)
-    
-    def _draw_buttons(self):   
-        if not self.stats.game_active:
-            self.play_button.draw_button("START", 300, 360)
-            self.levels_button.draw_button("LEVELS", 900, 360)
-        if not self.stats.game_active and self._check_levels_button() == True:
-            print("Event catched!")
+
+    def _draw_levels_buttons(self):
+        if not self.stats.game_active and self.levels_button.clicked:
+            self.stats.reset_stats()
+            self.bullets.empty()
+            self.aliens.empty()        
+            self._create_fleet()
+            self.ship.center_ship()
             button = Button(self)
-            button.width, button.height = 50, 50 
-            button.draw_button("1", 400, 280)
-             
-         
+            button.draw_button("1", 350, 180)
+
+
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
         #self.screen.blit(self.settings.bg_image, self.settings.bg_image_rect)
         self.ship.blitme()
         self._draw_bullet()
         self.aliens.draw(self.screen)
-        self._draw_buttons()        
+        self._draw_main_buttons()
+        self._draw_levels_buttons()
         pygame.display.flip()
 
     def run_game(self):
