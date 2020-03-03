@@ -57,7 +57,8 @@ class AlienInvasion:
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                self._check_mouse_events()                
+                self._check_mouse_events()
+                                
 
     def _draw_bullet(self):
         for bullet in self.bullets.sprites():
@@ -143,10 +144,14 @@ class AlienInvasion:
         self._check_aliens_bottom() 
 
     def _draw_main_buttons(self):
-        if not self.stats.game_active:
-            if not self.levels_button.clicked:
-                self.play_button.draw_button("START", 450, 360)
-                self.levels_button.draw_button("LEVELS", 750, 360)
+        if not self.stats.game_active and not self.levels_button.clicked:
+            self.play_button.draw_button("START", 450, 360)
+            self.levels_button.draw_button("LEVELS", 750, 360)
+                
+    def _draw_levels_buttons(self):
+        if not self.stats.game_active and self.levels_button.clicked:
+            button = Button(self)
+            button.draw_button("1", 350, 180)
 
     def _check_play_button(self, mouse_pos):        
         if self.play_button.check_button(mouse_pos) and not self.stats.game_active:      
@@ -154,9 +159,11 @@ class AlienInvasion:
             self._start_game()
         
     def _check_levels_button(self, mouse_pos):
-        if self.levels_button.check_button(mouse_pos) and not self.stats.game_active:
+        pygame.event.wait()
+        mouse_press = pygame.mouse.get_pressed()
+        if self.levels_button.check_button(mouse_pos) and not self.stats.game_active and mouse_press:
             print("Clicked!")           
-            self._draw_levels_buttons()
+            self._update_screen()
 
     def _start_game(self):
         self.stats.game_active = True
@@ -166,16 +173,6 @@ class AlienInvasion:
         self._create_fleet()
         self.ship.center_ship()
         pygame.mouse.set_visible(False)
-
-    def _draw_levels_buttons(self):
-        if not self.stats.game_active and self.levels_button.clicked:
-            self.stats.reset_stats()
-            self.bullets.empty()
-            self.aliens.empty()        
-            self._create_fleet()
-            self.ship.center_ship()
-            button = Button(self)
-            button.draw_button("1", 350, 180)
 
 
     def _update_screen(self):
