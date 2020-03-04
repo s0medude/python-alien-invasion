@@ -39,6 +39,7 @@ class AlienInvasion:
                 self._start_game()
         elif event.key == pygame.K_r:
                 self.stats.game_active = False
+                self.levels_button.clicked = False
                 pygame.mouse.set_visible(True)
 
     def _check_keyup_events(self, event):
@@ -51,8 +52,9 @@ class AlienInvasion:
         mouse_pos = pygame.mouse.get_pos()
         if not self.levels_button.clicked:
             self._check_play_button(mouse_pos)
-        self._check_main_levels_button(mouse_pos)
-        self._check_level_button_(mouse_pos)              
+            self._check_main_levels_button(mouse_pos)
+        self._check_level_button(mouse_pos)
+                      
 
     def _check_events(self):
         for event in pygame.event.get():
@@ -175,19 +177,14 @@ class AlienInvasion:
             self._start_game()
         
     def _check_main_levels_button(self, mouse_pos):
-        pygame.event.wait()
-        mouse_press = pygame.mouse.get_pressed()
-        if self.levels_button.check_button(mouse_pos) and not self.stats.game_active and mouse_press:
+        if self.levels_button.check_button(mouse_pos) and not self.stats.game_active:
             self._update_screen()
     
-    def _check_level_button_(self, mouse_pos):
+    def _check_level_button(self, mouse_pos):
         for button in self.button_levels_list:
             if not self.stats.game_active and button.check_button(mouse_pos):
-                print("clicked")
-                self.settings.initialize_dynamic_settings() 
-                self.settings.increase_speed(4)
                 self._start_game()
-        
+                        
     def _start_game(self):
         self.stats.game_active = True
         self.stats.reset_stats()
