@@ -9,7 +9,7 @@ class Button():
         self.text_color = (255, 255, 255)
         self.font = pygame.font.SysFont(None, 48)
         self.rect = pygame.Rect(0, 0, self.width, self.height)
-        self.clicked = True
+        self.clicked = False
 
     def prep_msg(self, msg):
         self.msg_image = self.font.render(msg, True, self.text_color, self.color)

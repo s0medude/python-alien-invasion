@@ -22,6 +22,7 @@ class AlienInvasion:
         self._create_fleet()
         self.play_button = Button(self)
         self.levels_button = Button(self)
+        self.button_levels_list = []
 
     def _check_keydown_events(self, event):
         if event.key == pygame.K_RIGHT:
@@ -36,6 +37,9 @@ class AlienInvasion:
             if not self.stats.game_active:
                 self.settings.initialize_dynamic_settings()
                 self._start_game()
+        elif event.key == pygame.K_r:
+                self.stats.game_active = False
+                pygame.mouse.set_visible(True)
 
     def _check_keyup_events(self, event):
         if event.key == pygame.K_RIGHT:
@@ -45,8 +49,10 @@ class AlienInvasion:
 
     def _check_mouse_events(self):
         mouse_pos = pygame.mouse.get_pos()
-        self._check_play_button(mouse_pos)
-        self._check_levels_button(mouse_pos)
+        if not self.levels_button.clicked:
+            self._check_play_button(mouse_pos)
+        self._check_main_levels_button(mouse_pos)
+        self._check_level_button_(mouse_pos)              
 
     def _check_events(self):
         for event in pygame.event.get():
@@ -57,8 +63,7 @@ class AlienInvasion:
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                self._check_mouse_events()
-                                
+                self._check_mouse_events()                                
 
     def _draw_bullet(self):
         for bullet in self.bullets.sprites():
@@ -147,24 +152,42 @@ class AlienInvasion:
         if not self.stats.game_active and not self.levels_button.clicked:
             self.play_button.draw_button("START", 450, 360)
             self.levels_button.draw_button("LEVELS", 750, 360)
-                
-    def _draw_levels_buttons(self):
-        if not self.stats.game_active and self.levels_button.clicked:
-            button = Button(self)
-            button.draw_button("1", 350, 180)
+        elif not self.stats.game_active and self.levels_button.clicked:
+            self._draw_level_buttons()
+            
+    def _draw_level_buttons(self):
+        button = Button(self)
+        button.rect.width = 150
+        button.rect.height = 50
+        number_buttons_x, number_rows_y = 3, 3
+        number = 1
+        for row in range(number_rows_y):
+            row += 1
+            for level in range(number_buttons_x):
+                level += 1                    
+                button.draw_button(f"Level {str(number)}", 300 * level, 180 * row)
+                self.button_levels_list.append(button)                
+                number += 1
 
     def _check_play_button(self, mouse_pos):        
         if self.play_button.check_button(mouse_pos) and not self.stats.game_active:      
             self.settings.initialize_dynamic_settings() 
             self._start_game()
         
-    def _check_levels_button(self, mouse_pos):
+    def _check_main_levels_button(self, mouse_pos):
         pygame.event.wait()
         mouse_press = pygame.mouse.get_pressed()
         if self.levels_button.check_button(mouse_pos) and not self.stats.game_active and mouse_press:
-            print("Clicked!")           
             self._update_screen()
-
+    
+    def _check_level_button_(self, mouse_pos):
+        for button in self.button_levels_list:
+            if not self.stats.game_active and button.check_button(mouse_pos):
+                print("clicked")
+                self.settings.initialize_dynamic_settings() 
+                self.settings.increase_speed(4)
+                self._start_game()
+        
     def _start_game(self):
         self.stats.game_active = True
         self.stats.reset_stats()
@@ -174,7 +197,6 @@ class AlienInvasion:
         self.ship.center_ship()
         pygame.mouse.set_visible(False)
 
-
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
         #self.screen.blit(self.settings.bg_image, self.settings.bg_image_rect)
@@ -182,7 +204,6 @@ class AlienInvasion:
         self._draw_bullet()
         self.aliens.draw(self.screen)
         self._draw_main_buttons()
-        self._draw_levels_buttons()
         pygame.display.flip()
 
     def run_game(self):
@@ -192,8 +213,7 @@ class AlienInvasion:
                 self.ship.update()
                 self._update_bullet()
                 self._update_aliens()
-            self._update_screen()
-
+            self._update_screen()            
 
 if __name__ == "__main__":
     ai = AlienInvasion()
