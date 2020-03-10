@@ -25,5 +25,4 @@ class Button():
     def check_button(self, mouse_pos=None):
         if mouse_pos is not None:
             self.clicked = self.rect.collidepoint(mouse_pos)
-            return self.clicked
         return self.clicked

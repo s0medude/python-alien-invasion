@@ -34,6 +34,7 @@ class AlienInvasion:
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = True
         elif event.key == pygame.K_q:
+            self._save_high_score()
             sys.exit()
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
@@ -60,7 +61,6 @@ class AlienInvasion:
         else:
             self._check_level_button(mouse_pos)           
                       
-
     def _check_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -76,7 +76,8 @@ class AlienInvasion:
     def _save_high_score(self):
         filename = 'high_score.json'
         with open(filename, 'w') as f:
-            json.dump(self.stats.high_score, f)                      
+            json.dump(self.stats.high_score, f)
+            f.close()                  
 
     def _draw_bullet(self):
         for bullet in self.bullets.sprites():
@@ -227,7 +228,7 @@ class AlienInvasion:
 
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
-        #self.screen.blit(self.settings.bg_image, self.settings.bg_image_rect)
+        self.screen.blit(self.settings.bg_image, self.settings.bg_image_rect)
         self.ship.blitme()
         self._draw_bullet()
         self.aliens.draw(self.screen)

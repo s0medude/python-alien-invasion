@@ -33,7 +33,7 @@ class Settings:
         self.alien_points = 50
 
     def increase_speed(self, level=None):
-        # Increase these attributtes according to the speedup_scale value 
+        # Increase these attributtes according to the speedup_scale or level if given
         if level:
             self.ship_speed *= level
             self.bullet_speed *= level

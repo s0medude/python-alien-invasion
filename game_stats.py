@@ -15,13 +15,17 @@ class GameStats:
 
     def set_high_score(self):
         filename = 'high_score.json'
-        f = None
+        score = 0
+        f = None        
         if not os.path.isfile(filename) or os.stat(filename).st_size == 0:
             f = open(filename, 'w')
-            json.dump(0, f)
+            json.dump(score, f)
         elif not f:
             f = open(filename)
-            high_score = json.load(f)
-            return high_score
+            score = json.load(f)
         f.close()
+        return score
+        
+        
+        
         
