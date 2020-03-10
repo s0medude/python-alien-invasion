@@ -11,8 +11,8 @@ class Alien(Sprite):
         self.image = pygame.image.load('img/alien.png')
         self.image = pygame.transform.scale(self.image, (80, 80))
         self.rect = self.image.get_rect()
-        self.rect.x = self.rect.width // 2
-        self.rect.y = self.rect.height // 2
+        self.rect.x = self.rect.width
+        self.rect.y = self.rect.height
         self.x = float(self.rect.x)
 
     def check_edges(self):
