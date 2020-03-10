@@ -61,7 +61,6 @@ class AlienInvasion:
         else:
             self._check_level_button(mouse_pos)           
                       
-
     def _check_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -229,7 +228,7 @@ class AlienInvasion:
 
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
-        #self.screen.blit(self.settings.bg_image, self.settings.bg_image_rect)
+        self.screen.blit(self.settings.bg_image, self.settings.bg_image_rect)
         self.ship.blitme()
         self._draw_bullet()
         self.aliens.draw(self.screen)
