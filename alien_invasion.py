@@ -34,6 +34,7 @@ class AlienInvasion:
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = True
         elif event.key == pygame.K_q:
+            self._save_high_score()
             sys.exit()
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
@@ -76,7 +77,8 @@ class AlienInvasion:
     def _save_high_score(self):
         filename = 'high_score.json'
         with open(filename, 'w') as f:
-            json.dump(self.stats.high_score, f)                      
+            json.dump(self.stats.high_score, f)
+            f.close()                  
 
     def _draw_bullet(self):
         for bullet in self.bullets.sprites():
